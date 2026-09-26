@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ask the Tenant Book — openigloo Assistant</title>
+  <meta name="description" content="Authoritative AI assistant for NYC housing law and openigloo platform policies. Verified in-corpus citations, conflict resolution, and strict role clearance.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="/static/vendor/marked.min.js"></script>
+</head>
+<body>
+  <!-- Top Navigation & Global Controls -->
+  <header class="app-header">
+    <div class="header-branding">
+      <div class="brand-logo">
+        <svg class="logo-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="32" height="32" rx="8" fill="url(#brand-grad)"/>
+          <path d="M16 7L7 14V24C7 24.5523 7.44772 25 8 25H24C24.5523 25 25 24.5523 25 24V14L16 7Z" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+          <path d="M13 25V18C13 17.4477 13.4477 17 14 17H18C18.5523 17 19 17.4477 19 18V25" stroke="white" stroke-width="2"/>
+          <circle cx="16" cy="12" r="1.5" fill="white"/>
+          <defs>
+            <linearGradient id="brand-grad" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#0066FF"/>
+              <stop offset="1" stop-color="#00D2FF"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <div class="brand-title-wrap">
+          <span class="brand-name">openigloo</span>
+          <span class="app-title">Ask the Tenant Book</span>
+          <span class="version-tag">Bar 6 Fidelity</span>
+        </div>
+        <p class="brand-subtitle">Authoritative NYC Housing Law & Policy Assistant (30 Verified Documents)</p>
+      </div>
+    </div>
+
+    <!-- Global App Bar Controls -->
+    <div class="header-controls">
+      <!-- Role Selector -->
+      <div class="control-group">
+        <label class="control-label" for="role-select">
+          <span class="label-icon">👤</span> Requester Role
+          <span id="role-clearance-badge" class="clearance-pill pill-renter">Public Renter</span>
+        </label>
+        <div class="segmented-control" id="role-segmented-control" role="radiogroup" aria-label="Role selector">
+          <button type="button" class="segment-btn active" data-role="renter" role="radio" aria-checked="true">
+            <span class="btn-dot"></span> Renter
+          </button>
+          <button type="button" class="segment-btn" data-role="landlord" role="radio" aria-checked="false">
+            <span class="btn-dot"></span> Landlord
+          </button>
+          <button type="button" class="segment-btn" data-role="staff" role="radio" aria-checked="false">
+            <span class="btn-dot"></span> Staff
+          </button>
+        </div>
+      </div>
+
+      <!-- As-Of Date Control -->
+      <div class="control-group">
+        <label class="control-label" for="as-of-date">
+          <span class="label-icon">📅</span> As-Of Date
+          <span class="subtle-hint">(Rule effective date)</span>
+        </label>
+        <div class="date-picker-wrap">
+          <input type="date" id="as-of-date" class="date-input" value="2025-08-15" aria-label="As of date">
+          <div class="preset-dropdown-wrap">
+            <button type="button" class="preset-toggle-btn" id="date-presets-btn" title="Quick date presets">
+              ⚡ Presets <span class="chevron">▼</span>
+            </button>
+            <div class="dropdown-menu" id="date-presets-menu">
+              <button type="button" class="menu-item" data-date="2025-09-01">Today (2025-09-01)</button>
+              <button type="button" class="menu-item" data-date="2025-08-15">Post-FARE Act (2025-08-15)</button>
+              <button type="button" class="menu-item" data-date="2025-05-01">Pre-FARE Act (2025-05-01)</button>
+              <button type="button" class="menu-item" data-date="2025-01-15">RGB Order 56 (2025-01-15)</button>
+              <button type="button" class="menu-item" data-date="2024-07-15">RGB Order 55 (2024-07-15)</button>
+              <button type="button" class="menu-item" data-date="2019-05-01">Pre-HSTPA (2019-05-01)</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reviewer Walkthrough Dropdown -->
+      <div class="control-group walkthrough-group">
+        <label class="control-label" for="walkthrough-select">
+          <span class="label-icon">🎯</span> Benchmark Walkthrough
+          <span class="test-count-badge">12 Presets</span>
+        </label>
+        <div class="select-wrapper">
+          <select id="walkthrough-select" class="styled-select" aria-label="Reviewer Walkthrough 12 Presets">
+            <option value="" disabled selected>Select Benchmark Scenario (1-12)...</option>
+            <optgroup label="Plain Answer & Contradictions">
+              <option value="0">1. Plain Answer: 14-Day Security Deposit Return</option>
+              <option value="1">2. Contradiction: No-Fee Listing vs FARE Act Broker Fee</option>
+              <option value="2">3. Contradiction: Seasonal Deposit Exception vs openigloo Cap</option>
+              <option value="3">4. Policy Override: Rent Renewal % Ban (Claire Policy P2)</option>
+            </optgroup>
+            <optgroup label="Refusal Distinction (Qualification Bar 6)">
+              <option value="4">5. Refusal (Out of Corpus): New Jersey Jurisdiction</option>
+              <option value="5">6. Refusal (Out of Corpus): SCRIE Senior Rent Exemption</option>
+              <option value="6">7. Refusal (Role Blocked): Renter asking Landlord Criteria</option>
+              <option value="7">8. Role Counterpart: Landlord asking Voucher Criteria</option>
+            </optgroup>
+            <optgroup label="Temporal & Historical Orders">
+              <option value="8">9. Temporal: Pre-FARE Act Not in Force (2025-05-01)</option>
+              <option value="9">10. Temporal: Post-FARE Act In Force (2025-08-15)</option>
+              <option value="10">11. Superseded Order: RGB Order 55 vs 56</option>
+              <option value="11">12. Staff Escalation: Discrimination Report Handling</option>
+            </optgroup>
+          </select>
+        </div>
+      </div>
+
+      <!-- Theme Switcher -->
+      <button type="button" id="theme-toggle" class="icon-btn" aria-label="Toggle theme" title="Toggle dark/light mode">
+        <span class="theme-icon">🌙</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Dual-Pane Application Container -->
+  <main class="app-main">
+    <!-- LEFT PANE: Assistant Interaction & Response Workspace -->
+    <section class="pane workspace-pane" aria-labelledby="workspace-heading">
+      <div class="pane-header">
+        <div class="pane-title-wrap">
+          <span class="pane-icon">💬</span>
+          <h2 id="workspace-heading" class="pane-title">Assistant Workspace</h2>
+        </div>
+        <div class="pane-actions">
+          <button type="button" id="clear-btn" class="btn-subtle" title="Clear query and response">
+            Clear
+          </button>
+        </div>
+      </div>
+
+      <!-- Query Input Box -->
+      <div class="query-box-container">
+        <form id="ask-form" class="ask-form">
+          <div class="textarea-wrapper">
+            <textarea
+              id="question-input"
+              class="question-textarea"
+              placeholder="Ask a question about NYC rent stabilization, deposits, broker fees, or openigloo policies..."
+              rows="3"
+              required
+            ></textarea>
+            <div class="input-bottom-bar">
+              <span class="keyboard-hint"><kbd>Ctrl</kbd> + <kbd>Enter</kbd> to submit</span>
+              <button type="submit" id="submit-btn" class="btn-primary">
+                <span class="btn-text">Ask Assistant</span>
+                <span class="btn-icon">➤</span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Dynamic Response Container -->
+      <div id="response-container" class="response-container">
+        <!-- Initial Blank State -->
+        <div id="state-empty" class="state-view state-empty active">
+          <div class="empty-hero">
+            <div class="hero-icon">📖</div>
+            <h3>Authoritative Tenant Book Assistant</h3>
+            <p>Ask any New York City housing law or openigloo platform policy question. Answers strictly cite verified documents verbatim.</p>
+            <div class="sample-chips">
+              <span class="chip-label">Quick test prompts:</span>
+              <button type="button" class="chip-btn" data-preset-idx="0">14-day deposit return</button>
+              <button type="button" class="chip-btn" data-preset-idx="1">No-fee listing conflict</button>
+              <button type="button" class="chip-btn" data-preset-idx="6">Role-blocked screening</button>
+              <button type="button" class="chip-btn" data-preset-idx="10">Superseded RGB 55</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Loading / Skeleton State -->
+        <div id="state-loading" class="state-view state-loading">
+          <div class="skeleton-card">
+            <div class="skeleton-header">
+              <div class="skeleton-pill"></div>
+              <div class="skeleton-pill small"></div>
+            </div>
+            <div class="skeleton-line full"></div>
+            <div class="skeleton-line medium"></div>
+            <div class="skeleton-line short"></div>
+            <div class="skeleton-citations">
+              <div class="skeleton-pill citation"></div>
+              <div class="skeleton-pill citation"></div>
+            </div>
+            <div class="loading-status-text">
+              <span class="spinner"></span>
+              <span id="loading-message">Verifying corpus passages and checking role clearance...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- State A: Answered Card -->
+        <div id="state-answered" class="state-view state-answered">
+          <div class="card card-answered">
+            <div class="card-status-bar">
+              <span class="status-badge badge-answered">
+                <span class="badge-icon">✓</span> Verified In-Corpus Answer
+              </span>
+              <span id="answered-asof-badge" class="badge-subtle"></span>
+            </div>
+
+            <!-- Superseded Historical Rule Banner (if present) -->
+            <div id="superseded-notice-box" class="superseded-notice-banner hidden">
+              <div class="notice-icon">⚠️</div>
+              <div class="notice-content">
+                <strong class="notice-title">Historical Rule Notice</strong>
+                <p id="superseded-notice-text" class="notice-body"></p>
+              </div>
+            </div>
+
+            <!-- Conflict Resolution & Governing Rule Box (if present) -->
+            <div id="governing-box" class="governing-card hidden">
+              <div class="governing-header">
+                <div class="gov-title-wrap">
+                  <span class="gov-icon">⚖️</span>
+                  <span class="gov-title">Conflict Resolution / Governing Rule</span>
+                </div>
+                <span class="gov-status-pill">Strictly Governs</span>
+              </div>
+              <div class="governing-body">
+                <div class="gov-winner">
+                  <span class="gov-label">Governing Document:</span>
+                  <strong id="gov-winner-doc" class="gov-doc-name"></strong>
+                </div>
+                <p id="gov-reason" class="gov-reason-text"></p>
+                <div id="gov-overridden-container" class="gov-overridden-wrap">
+                  <span class="gov-label">Overridden Documents:</span>
+                  <div id="gov-overridden-list" class="overridden-tags"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Answer Content Body -->
+            <div class="card-body">
+              <div id="answer-text" class="markdown-body answer-markdown"></div>
+            </div>
+
+            <!-- Citations Section -->
+            <div class="card-citations-section">
+              <div class="citations-header">
+                <span class="citations-icon">📌</span>
+                <span class="citations-title">Verified Citations (Click to view in source):</span>
+              </div>
+              <div id="citations-list" class="citations-pill-grid"></div>
+            </div>
+
+            <!-- Legal Advice Boundary Banner -->
+            <div id="legal-disclaimer-box" class="legal-disclaimer-box hidden">
+              <span class="disclaimer-icon">⚖️</span>
+              <p class="disclaimer-text">
+                <strong>openigloo is an informational assistant, not an attorney.</strong>
+                Per policy P9, this assistant cannot recommend legal action or rent withholding. Please consult a qualified tenant attorney or legal services organization.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- State B: Out-of-Corpus Refusal Banner -->
+        <div id="state-out-of-corpus" class="state-view state-refused-out-of-corpus">
+          <div class="card card-out-of-corpus">
+            <div class="refusal-badge-bar">
+              <span class="status-badge badge-neutral-refusal">
+                <span class="badge-icon">🔍 ⊘</span> Not in the Tenant Book
+              </span>
+              <span class="refusal-code-pill">out_of_corpus</span>
+            </div>
+            <div class="refusal-content">
+              <h3 class="refusal-headline">Unanswerable from Corpus</h3>
+              <p id="out-of-corpus-message" class="refusal-explanation"></p>
+              <div class="refusal-notice-subtext">
+                <span>The assistant operates strictly on verified NYC housing law and platform documents. It never hallucinates or pulls from external web sources.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- State C: Role-Blocked Access-Restricted Banner -->
+        <div id="state-role-blocked" class="state-view state-refused-role-blocked">
+          <div class="card card-role-blocked">
+            <div class="refusal-badge-bar">
+              <span class="status-badge badge-security-refusal">
+                <span class="badge-icon">🔒 🛡️</span> Access Restricted
+              </span>
+              <span class="refusal-code-pill pill-security">not_permitted</span>
+            </div>
+            <div class="refusal-content">
+              <h3 class="refusal-headline">Information Not Available for Your Role</h3>
+              <p id="role-blocked-message" class="refusal-explanation"></p>
+              <div class="role-action-callout">
+                <div class="callout-icon">💡</div>
+                <div class="callout-text">
+                  <strong>Role Clearance Required:</strong> Switch your role in the top header (to Landlord or Staff) to view this policy if you are authorized.
+                </div>
+              </div>
+              <div class="zero-leak-guarantee">
+                <span class="shield-dot"></span> Zero-Leak Integrity: Document titles, sections, and quotes are strictly redacted for unauthorized roles.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT PANE: Evidence & Source Document Viewer -->
+    <section class="pane evidence-pane" aria-labelledby="evidence-heading">
+      <div class="pane-header">
+        <div class="pane-title-wrap">
+          <span class="pane-icon">📄</span>
+          <h2 id="evidence-heading" class="pane-title">Evidence & Source Viewer</h2>
+        </div>
+        <div class="doc-browse-select-wrap">
+          <label for="doc-selector" class="sr-only">Browse Corpus Document</label>
+          <select id="doc-selector" class="styled-select select-compact">
+            <option value="" disabled selected>Browse 30 Documents...</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Document Header & Metadata Bar -->
+      <div id="doc-header-card" class="doc-header-card">
+        <div class="doc-header-top">
+          <div class="doc-title-row">
+            <h3 id="doc-title" class="doc-title">Select a citation or document to view</h3>
+            <span id="doc-id-badge" class="badge-mono doc-id-tag">no document loaded</span>
+          </div>
+          <a id="doc-source-link" href="#" target="_blank" rel="noopener" class="source-link hidden" title="Open official source">
+            Source Link ↗
+          </a>
+        </div>
+
+        <div class="doc-meta-row">
+          <div class="meta-item">
+            <span class="meta-label">Issuer:</span>
+            <span id="doc-issuer" class="meta-value">—</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">In Force:</span>
+            <span id="doc-effective-dates" class="meta-value">—</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Clearance:</span>
+            <div id="doc-visibility-pills" class="visibility-pills"></div>
+          </div>
+        </div>
+
+        <!-- Document Superseded Warning Banner in Viewer -->
+        <div id="doc-superseded-banner" class="doc-superseded-banner hidden">
+          <span class="alert-icon">⚠️</span>
+          <span id="doc-superseded-text" class="alert-text"></span>
+        </div>
+      </div>
+
+      <!-- Document Content Body with Verbatim Highlighting -->
+      <div class="doc-viewer-scroll-container">
+        <div id="doc-body-container" class="doc-body markdown-body">
+          <div class="doc-placeholder">
+            <div class="placeholder-icon">📑</div>
+            <h4>No Document Loaded</h4>
+            <p>Click any citation pill on the left or select a document from the dropdown above to inspect full source evidence with in-place highlighting.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Floating Toast Notifications -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- Main Modular Application Logic -->
+  <script type="module" src="/static/app.js"></script>
+</body>
+</html>
