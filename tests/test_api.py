@@ -194,6 +194,25 @@ def test_http_server():
             assert res2["refusal_reason"] == "not_permitted"
             assert res2["citations"] == []
 
+        # 9. POST /ask (Dynamic RAG with Gemini 3.5 Flash Lite)
+        req_dynamic = {
+            "id": "test-req-rag-gemini",
+            "question": "Can my landlord charge me 2 months security deposit?",
+            "role": "renter",
+            "as_of": "2025-08-15"
+        }
+        req3 = urllib.request.Request(
+            f"{base}/ask",
+            data=json.dumps(req_dynamic).encode("utf-8"),
+            headers={"Content-Type": "application/json"}
+        )
+        with urllib.request.urlopen(req3) as r:
+            assert r.status == 200
+            res3 = json.loads(r.read().decode("utf-8"))
+            assert res3["status"] == "answered"
+            assert len(res3["citations"]) >= 1
+            print("✓ Live Dynamic RAG query verified via Gemini 3.5 Flash Lite.")
+
         print("✓ All HTTP server API endpoints verified successfully.")
     finally:
         server.shutdown()

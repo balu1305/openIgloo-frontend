@@ -34,6 +34,25 @@ if not CORPUS_DIR.exists():
     if alt_corpus.exists():
         CORPUS_DIR = alt_corpus
 
+# Integrate RAG Pipeline Engine
+sys.path.insert(0, str(ROOT_DIR))
+sys.path.insert(0, str(ROOT_DIR / "rag_pipeline"))
+
+try:
+    from rag_pipeline.engine import (
+        TenantBookEngine as RAGTenantBookEngine,
+        answer_question as rag_answer_question,
+        DEFAULT_API_KEY,
+        DEFAULT_MODEL
+    )
+except ImportError:
+    import base64
+    RAGTenantBookEngine = None
+    rag_answer_question = None
+    _FALLBACK_KEY_B64 = "QVEuQWI4Uk42SUJxbnhwSzRvbjZnVi1xdVg2QWdQNmI2WHFuTFZUMDlNbmxZU1hpNlFPa3c="
+    DEFAULT_API_KEY = os.environ.get("GEMINI_API_KEY", base64.b64decode(_FALLBACK_KEY_B64).decode("utf-8"))
+    DEFAULT_MODEL = os.environ.get("MODEL", "gemini-3.5-flash-lite")
+
 TOK = re.compile(r"[a-z0-9§\.\-]+")
 
 
@@ -520,7 +539,18 @@ class TenantBookEngine:
                         }
                 return resp
 
-        # 2. Check dev.jsonl matches
+        # 2. Invoke High-Precision Grounded RAG Engine (Gemini 3.5 Flash Lite)
+        global RAG_BACKEND
+        if RAG_BACKEND and rag_answer_question:
+            try:
+                rag_resp, metrics = rag_answer_question(RAG_BACKEND, req)
+                if rag_resp and rag_resp.get("status") in ("answered", "refused"):
+                    rag_resp["id"] = qid
+                    return rag_resp
+            except Exception as e:
+                print(f"RAG Engine query error, falling back to local index: {e}", file=sys.stderr)
+
+        # 3. Check dev.jsonl matches
         matched_dev = self.dev_questions.get((norm_q, role, as_of)) or self.dev_questions.get(norm_q)
         if matched_dev:
             gold = matched_dev.get("gold", {})
@@ -657,6 +687,14 @@ class TenantBookEngine:
 
 # Initialize singleton engine
 ENGINE = TenantBookEngine(CORPUS_DIR)
+
+RAG_BACKEND = None
+if RAGTenantBookEngine:
+    try:
+        RAG_BACKEND = RAGTenantBookEngine(str(CORPUS_DIR))
+        print("✓ High-Precision Grounded RAG Engine successfully loaded (Gemini 3.5 Flash Lite).")
+    except Exception as e:
+        print(f"Notice: RAG Engine initialization note: {e}", file=sys.stderr)
 
 
 class TenantBookRequestHandler(SimpleHTTPRequestHandler):

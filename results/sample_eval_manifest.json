@@ -1,0 +1,23 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "questions_count": 2,
+  "per_question": [
+    {
+      "id": "tb-0001",
+      "input_tokens": 2016,
+      "output_tokens": 464,
+      "latency_s": 2.68
+    },
+    {
+      "id": "tb-0004",
+      "input_tokens": 2173,
+      "output_tokens": 469,
+      "latency_s": 2.85
+    }
+  ],
+  "total_input_tokens": 4189,
+  "total_output_tokens": 933,
+  "total_latency_s": 5.53,
+  "total_wall_clock_s": 6.55,
+  "mean_latency_s": 2.77
+}

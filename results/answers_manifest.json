@@ -1,0 +1,71 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "questions_count": 10,
+  "per_question": [
+    {
+      "id": "tb-0001",
+      "input_tokens": 2016,
+      "output_tokens": 401,
+      "latency_s": 2.25
+    },
+    {
+      "id": "tb-0004",
+      "input_tokens": 2173,
+      "output_tokens": 484,
+      "latency_s": 2.39
+    },
+    {
+      "id": "tb-0005",
+      "input_tokens": 2153,
+      "output_tokens": 258,
+      "latency_s": 2.05
+    },
+    {
+      "id": "tb-0006",
+      "input_tokens": 2080,
+      "output_tokens": 638,
+      "latency_s": 2.99
+    },
+    {
+      "id": "tb-0009",
+      "input_tokens": 2127,
+      "output_tokens": 717,
+      "latency_s": 3.06
+    },
+    {
+      "id": "tb-0010",
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "latency_s": 0.0
+    },
+    {
+      "id": "tb-0011",
+      "input_tokens": 2258,
+      "output_tokens": 196,
+      "latency_s": 1.76
+    },
+    {
+      "id": "tb-0012",
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "latency_s": 0.0
+    },
+    {
+      "id": "tb-0016",
+      "input_tokens": 2117,
+      "output_tokens": 357,
+      "latency_s": 2.36
+    },
+    {
+      "id": "tb-0017",
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "latency_s": 0.0
+    }
+  ],
+  "total_input_tokens": 14924,
+  "total_output_tokens": 3051,
+  "total_latency_s": 16.86,
+  "total_wall_clock_s": 21.93,
+  "mean_latency_s": 1.69
+}
